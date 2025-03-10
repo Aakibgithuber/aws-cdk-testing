@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { KaitoApplicationStack } from '../lib/deploy-stack'; // Ensure this path is correct
+import { MyAwsSetupStack } from '../lib/deploy-stack'; // Ensure correct import path
 
 const app = new cdk.App();
-new KaitoApplicationStack(app, 'KaitoApplicationStack'); // Add this back
+new MyAwsSetupStack(app, 'MyAwsSetupStack'); // Ensure this line exists
+
+app.synth();
