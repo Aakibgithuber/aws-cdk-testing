@@ -26,10 +26,13 @@ export class MyAwsSetupStack extends cdk.Stack {
       solutionStackName: '64bit Amazon Linux 2 v5.9.12 running Node.js 18'
     });
 
+    // Ensure the environment is created after the application
+    ebEnv.addDependency(ebApp);
+
     // Step 4: Create a CloudFront Distribution
     const cfDistribution = new cloudfront.Distribution(this, 'MyCloudFront', {
       defaultBehavior: {
-        origin: new origins.HttpOrigin(`${ebEnv.ref}.elasticbeanstalk.com`),
+        origin: new origins.HttpOrigin(`${ebEnv.attrEndpointUrl}`), // Correct way to reference Beanstalk URL
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
       }
     });
