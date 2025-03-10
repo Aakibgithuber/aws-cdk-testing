@@ -39,3 +39,5 @@ jobs:
 
       - name: Deploy AWS CDK Stack
         run: cdk deploy --require-approval never
+      - name: Destroy AWS CDK Stack 
+        run: cdk destroy
