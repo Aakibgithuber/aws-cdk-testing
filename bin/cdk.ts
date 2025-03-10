@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { KaitoApplicationStack } from '../lib/deploy-stack';
 import * as projectConfig from '../config/projectConfig.json';
 
 const app = new cdk.App();
