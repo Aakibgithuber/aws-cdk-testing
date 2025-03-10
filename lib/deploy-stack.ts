@@ -23,7 +23,7 @@ export class MyAwsSetupStack extends cdk.Stack {
     const ebEnv = new elasticbeanstalk.CfnEnvironment(this, 'MyElasticBeanstalkEnv', {
       environmentName: 'MyApp-env',
       applicationName: ebApp.applicationName!,
-      solutionStackName: '64bit Amazon Linux 2 v5.4.3 running Node.js 14'
+      solutionStackName: '64bit Amazon Linux 2 v5.9.12 running Node.js 18'
     });
 
     // Step 4: Create a CloudFront Distribution
