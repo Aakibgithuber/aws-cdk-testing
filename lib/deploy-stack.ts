@@ -45,18 +45,11 @@ export class MyAwsSetupStack extends cdk.Stack {
       }))
     });
 
-    // Step 5: CloudFront Distribution for Beanstalk
-    const cfDistribution = new cloudfront.Distribution(this, 'MyCloudFront', {
-      defaultBehavior: {
-        origin: new origins.HttpOrigin(`${ebEnv.attrEndpointUrl}`),
-        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
-      }
-    });
 
     // Outputs
     new cdk.CfnOutput(this, 'BucketName', { value: myBucket.bucketName });
     new cdk.CfnOutput(this, 'ElasticBeanstalkEnv', { value: ebEnv.ref });
-    new cdk.CfnOutput(this, 'CloudFrontURL', { value: cfDistribution.distributionDomainName });
+    
   }
 }
 
