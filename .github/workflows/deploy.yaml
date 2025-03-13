@@ -38,5 +38,6 @@ jobs:
         run: cdk synth
 
       - name: Deploy AWS CDK Stack
-        run: cdk destroy
+        run: cdk destroy --require-approval never
+
 
