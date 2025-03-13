@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { MyAwsSetupStack } from '../lib/deploy-stack'; // Ensure correct import path
+import { KaitoApplicationStack } from '../lib/deploy-stack';
+import * as projectConfig from '../config/projectConfig.json';
 
 const app = new cdk.App();
-new MyAwsSetupStack(app, 'MyAwsSetupStack'); // Ensure this line exists
 
-app.synth();
+new KaitoApplicationStack(app, 'KaitoApplicationStack', {
+  stackName: `${projectConfig.projectPrefix}-pipeline-stack`,
+  env: {
+    region: projectConfig.environments.DEV.region,
+  },
+});
