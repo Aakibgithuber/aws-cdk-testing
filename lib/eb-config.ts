@@ -3,34 +3,34 @@ export const elasticBeanstalkConfig = [
   {
     namespace: 'aws:autoscaling:launchconfiguration',
     optionName: 'IamInstanceProfile',
-    value: 'MyInstanceProfile' // Instance profile reference will be dynamically assigned
+    value: 'MyInstanceProfile'
   },
 
-  // Environment Variables (Only keys, values left empty intentionally)
+  // Environment Variables
   ...[
-    'APP_NAME',
-    'AWS_REGION',
-    'DB_DATABASE',
-    'DB_HOST',
-    'DB_PORT',
-    'DB_USER',
-    'DB_PASSWORD',
-    'ENVIRONMENT',
-    'KC_ADMIN_CLIENT_ID',
-    'KC_ADMIN_CLIENT_SECRET',
-    'KC_BASE_URL',
-    'KC_CLIENT_ID',
-    'KC_CLIENT_SECRET',
-    'KC_CLIENT_UUID',
-    'KC_REALM',
-    'NODE_ENV',
-    'PORT',
-    'SENDGRID_API_KEY',
-    'SENDGRID_SENDER_EMAIL_ID'
-  ].map((optionName) => ({
+    { optionName: 'APP_NAME', value: '' },
+    { optionName: 'AWS_REGION', value: '' },
+    { optionName: 'DB_DATABASE', value: '' },
+    { optionName: 'DB_HOST', value: '' },
+    { optionName: 'DB_PASSWORD', value: '' },
+    { optionName: 'DB_PORT', value: '5432' }, // Default value for DB_PORT
+    { optionName: 'DB_USER', value: '' },
+    { optionName: 'ENVIRONMENT', value: '' },
+    { optionName: 'KC_ADMIN_CLIENT_ID', value: '' },
+    { optionName: 'KC_ADMIN_CLIENT_SECRET', value: '' },
+    { optionName: 'KC_BASE_URL', value: '' },
+    { optionName: 'KC_CLIENT_ID', value: '' },
+    { optionName: 'KC_CLIENT_SECRET', value: '' },
+    { optionName: 'KC_CLIENT_UUID', value: '' },
+    { optionName: 'KC_REALM', value: '' },
+    { optionName: 'NODE_ENV', value: '' },
+    { optionName: 'PORT', value: '' },  
+    { optionName: 'SENDGRID_API_KEY', value: '' },
+    { optionName: 'SENDGRID_SENDER_EMAIL_ID', value: '' }
+  ].map(({ optionName, value }) => ({
     namespace: 'aws:elasticbeanstalk:application:environment',
     optionName,
-    value: ''  // Empty value for now (we'll set these in console later)
+    value
   })),
 
   // EC2 Instance Configuration
