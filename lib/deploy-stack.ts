@@ -34,22 +34,20 @@ export class MyAwsSetupStack extends cdk.Stack {
       roles: [instanceRole.roleName]
     });
 
-    // Step 4: Elastic Beanstalk Environment
+    // Step 4: Elastic Beanstalk Environment (Using Platform ARN ✅)
     const ebEnv = new elasticbeanstalk.CfnEnvironment(this, 'MyElasticBeanstalkEnv', {
       environmentName: 'MyApp-env',
       applicationName: ebApp.applicationName!,
-      solutionStackName: 'Docker running on 64bit Amazon Linux 2023/4.4.4',
+      platformArn: 'arn:aws:elasticbeanstalk:ap-south-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4',
       optionSettings: elasticBeanstalkConfig.map(option => ({
         ...option,
         value: option.optionName === 'IamInstanceProfile' ? instanceProfile.ref : option.value
       }))
     });
 
-
     // Outputs
     new cdk.CfnOutput(this, 'BucketName', { value: myBucket.bucketName });
     new cdk.CfnOutput(this, 'ElasticBeanstalkEnv', { value: ebEnv.ref });
-    
   }
 }
 
