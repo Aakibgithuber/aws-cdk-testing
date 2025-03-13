@@ -12,14 +12,14 @@ export class KaitoApplicationStack extends cdk.Stack {
 
     // Step 1: Create an S3 Bucket
     const myBucket = new s3.Bucket(this, `${id}-test-bucket`, {
-      bucketName: "kaito-test-bucket",
+      bucketName: "kaito-test-bucket-testing-dev",
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     // Step 2: Elastic Beanstalk Application
     const ebApp = new elasticbeanstalk.CfnApplication(this, 'MyElasticBeanstalkApp', {
-      applicationName: 'testing-app'
+      applicationName: 'testing-new-app'
     });
 
     // Step 3: IAM Role for Beanstalk EC2 Instances (Instance Profile)
@@ -37,7 +37,7 @@ export class KaitoApplicationStack extends cdk.Stack {
 
     // Step 4: Elastic Beanstalk Environment (Using Platform ARN)
     const ebEnv = new elasticbeanstalk.CfnEnvironment(this, 'MyElasticBeanstalkEnv', {
-      environmentName: 'testing-env',
+      environmentName: 'testing-new-env',
       applicationName: ebApp.applicationName!,
       platformArn: 'arn:aws:elasticbeanstalk:ap-south-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4',
       optionSettings: [
