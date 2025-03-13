@@ -4,21 +4,22 @@ import * as elasticbeanstalk from 'aws-cdk-lib/aws-elasticbeanstalk';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
-import { elasticBeanstalkConfig } from './eb-config';  // ✅ Config Imported
+import { elasticBeanstalkConfig } from './eb-config';
 
-export class MyAwsSetupStack extends cdk.Stack {
+export class KaitoApplicationStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // Step 1: Create an S3 Bucket
-    const myBucket = new s3.Bucket(this, 'MyBucket', {
+    const myBucket = new s3.Bucket(this, `${id}-test-bucket`, {
+      bucketName: "kaito-test-bucket",
       versioned: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    // Step 2: Elastic Beanstalk Application
-    const ebApp = new elasticbeanstalk.CfnApplication(this, 'MyElasticBeanstalkApp', {
-      applicationName: 'MyApp'
+     // Step 2: Elastic Beanstalk Application
+     const ebApp = new elasticbeanstalk.CfnApplication(this, 'MyElasticBeanstalkApp', {
+      applicationName: 'kaito-eb-app'
     });
 
     // Step 3: IAM Role for Beanstalk EC2 Instances (Instance Profile)
@@ -34,9 +35,9 @@ export class MyAwsSetupStack extends cdk.Stack {
       roles: [instanceRole.roleName]
     });
 
-    // Step 4: Elastic Beanstalk Environment (Using Platform ARN ✅)
+    // Step 4: Elastic Beanstalk Environment (Using Platform ARN)
     const ebEnv = new elasticbeanstalk.CfnEnvironment(this, 'MyElasticBeanstalkEnv', {
-      environmentName: 'MyApp-env',
+      environmentName: 'kaito-eb-env',
       applicationName: ebApp.applicationName!,
       platformArn: 'arn:aws:elasticbeanstalk:ap-south-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4',
       optionSettings: elasticBeanstalkConfig.map(option => ({
@@ -44,6 +45,7 @@ export class MyAwsSetupStack extends cdk.Stack {
         value: option.optionName === 'IamInstanceProfile' ? instanceProfile.ref : option.value
       }))
     });
+
 
     // Outputs
     new cdk.CfnOutput(this, 'BucketName', { value: myBucket.bucketName });
