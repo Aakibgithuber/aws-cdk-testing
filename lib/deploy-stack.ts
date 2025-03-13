@@ -17,8 +17,8 @@ export class KaitoApplicationStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-     // Step 2: Elastic Beanstalk Application
-     const ebApp = new elasticbeanstalk.CfnApplication(this, 'MyElasticBeanstalkApp', {
+    // Step 2: Elastic Beanstalk Application
+    const ebApp = new elasticbeanstalk.CfnApplication(this, 'MyElasticBeanstalkApp', {
       applicationName: 'kaito-eb-app'
     });
 
@@ -40,12 +40,23 @@ export class KaitoApplicationStack extends cdk.Stack {
       environmentName: 'kaito-eb-env',
       applicationName: ebApp.applicationName!,
       platformArn: 'arn:aws:elasticbeanstalk:ap-south-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4',
-      optionSettings: elasticBeanstalkConfig.map(option => ({
-        ...option,
-        value: option.optionName === 'IamInstanceProfile' ? instanceProfile.ref : option.value
-      }))
+      optionSettings: [
+        ...elasticBeanstalkConfig,
+        {
+          namespace: 'aws:autoscaling:launchconfiguration',
+          optionName: 'IamInstanceProfile',
+          value: instanceProfile.ref
+        }
+      ]
     });
 
+    // Step 5: CloudFront Distribution for Beanstalk
+    const cfDistribution = new cloudfront.Distribution(this, 'MyCloudFront', {
+      defaultBehavior: {
+        origin: new origins.HttpOrigin(`${ebEnv.attrEndpointUrl}`),
+        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+      }
+    });
 
     // Outputs
     new cdk.CfnOutput(this, 'BucketName', { value: myBucket.bucketName });
@@ -54,5 +65,5 @@ export class KaitoApplicationStack extends cdk.Stack {
 }
 
 const app = new cdk.App();
-new MyAwsSetupStack(app, 'MyAwsSetupStack');
+new KaitoApplicationStack(app, 'KaitoApplicationStack');
 app.synth();
