@@ -19,7 +19,7 @@ export class KaitoApplicationStack extends cdk.Stack {
 
     // Step 2: Elastic Beanstalk Application
     const ebApp = new elasticbeanstalk.CfnApplication(this, 'MyElasticBeanstalkApp', {
-      applicationName: 'kaito-eb-app'
+      applicationName: 'testing-app'
     });
 
     // Step 3: IAM Role for Beanstalk EC2 Instances (Instance Profile)
@@ -37,7 +37,7 @@ export class KaitoApplicationStack extends cdk.Stack {
 
     // Step 4: Elastic Beanstalk Environment (Using Platform ARN)
     const ebEnv = new elasticbeanstalk.CfnEnvironment(this, 'MyElasticBeanstalkEnv', {
-      environmentName: 'kaito-eb-env',
+      environmentName: 'testing-env',
       applicationName: ebApp.applicationName!,
       platformArn: 'arn:aws:elasticbeanstalk:ap-south-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4',
       optionSettings: [
