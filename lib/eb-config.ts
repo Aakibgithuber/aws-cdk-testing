@@ -20,12 +20,12 @@ export const elasticBeanstalkConfig = [
     'KC_ADMIN_CLIENT_SECRET',
     'KC_BASE_URL',
     'KC_CLIENT_ID',
-    'KC_CLIENT_SECRET'
-    'KC_CLIENT_UUID'
-    'KC_REALM'
-    'NODE_ENV'
-    'PORT'
-    'SENDGRID_API_KEY'
+    'KC_CLIENT_SECRET',
+    'KC_CLIENT_UUID',
+    'KC_REALM',
+    'NODE_ENV',
+    'PORT',
+    'SENDGRID_API_KEY',
     'SENDGRID_SENDER_EMAIL_ID'
   ].map((optionName) => ({
     namespace: 'aws:elasticbeanstalk:application:environment',
