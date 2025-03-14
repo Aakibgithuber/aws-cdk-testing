@@ -52,4 +52,6 @@ jobs:
             echo "❌ Lambda function '$LAMBDA_NAME' not found."
             exit 1
           fi
-
+      
+      - name: Deploy AWS CDK Stack
+        run: cdk destroy --require-approval never
