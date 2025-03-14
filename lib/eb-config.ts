@@ -38,8 +38,7 @@ export const elasticBeanstalkConfig = [
     { optionName: 'InstanceType', value: 't3.medium' },
     { optionName: 'RootVolumeType', value: 'gp3' },
     { optionName: 'RootVolumeSize', value: '30' },
-    { optionName: 'RootVolumeIOPS', value: '3000' },
-    { optionName: 'SecurityGroups', value: 'sg-04e643afc5833eb7f' }
+    { optionName: 'RootVolumeIOPS', value: '3000' }
   ].map(({ optionName, value }) => ({
     namespace: 'aws:autoscaling:launchconfiguration',
     optionName,
