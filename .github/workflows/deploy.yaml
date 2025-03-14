@@ -40,6 +40,9 @@ jobs:
       - name: Deploy AWS CDK Stack
         run: cdk destroy --require-approval never
 
+      - name: Destroy AWS CDK Stack
+        run: cdk destroy --require-approval never
+
       - name: Invoke Lambda for Schema Creation
         run: |
           LAMBDA_NAME="Kaito-SchemaCreator"  # ✅ Fixed name for accuracy
