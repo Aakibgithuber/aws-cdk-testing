@@ -4,7 +4,12 @@ import * as elasticbeanstalk from 'aws-cdk-lib/aws-elasticbeanstalk';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as nodejs from 'aws-cdk-lib/aws-lambda-nodejs';
 import { elasticBeanstalkConfig } from './eb-config';
+import * as dotenv from 'dotenv';
+
+dotenv.config(); // Load .env variables
 
 export class KaitoApplicationStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -12,14 +17,14 @@ export class KaitoApplicationStack extends cdk.Stack {
 
     // Step 1: Create an S3 Bucket
     const myBucket = new s3.Bucket(this, `${id}-test-bucket`, {
-      bucketName: "kaito-test-bucket-123",
+      bucketName: process.env.BUCKET_NAME!,
       versioned: true,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     // Step 2: Elastic Beanstalk Application
     const ebApp = new elasticbeanstalk.CfnApplication(this, 'MyElasticBeanstalkApp', {
-      applicationName: 'kaito-eb-app'
+      applicationName: process.env.EB_APP_NAME!
     });
 
     // Step 3: IAM Role for Beanstalk EC2 Instances (Instance Profile)
@@ -37,9 +42,9 @@ export class KaitoApplicationStack extends cdk.Stack {
 
     // Step 4: Elastic Beanstalk Environment (Using Platform ARN)
     const ebEnv = new elasticbeanstalk.CfnEnvironment(this, 'MyElasticBeanstalkEnv', {
-      environmentName: 'kaito-eb-env',
+      environmentName: process.env.EB_ENV_NAME!,
       applicationName: ebApp.applicationName!,
-      platformArn: 'arn:aws:elasticbeanstalk:ap-south-1::platform/Docker running on 64bit Amazon Linux 2023/4.4.4',
+      platformArn: process.env.PLATFORM_ARN!,
       optionSettings: [
         ...elasticBeanstalkConfig,
         {
@@ -49,6 +54,21 @@ export class KaitoApplicationStack extends cdk.Stack {
         }
       ]
     });
+
+    const schemaCreatorLambda = new nodejs.NodejsFunction(this, 'SchemaCreatorLambda', {
+      functionName: 'Kaito-SchemaCreator',
+      runtime: lambda.Runtime.NODEJS_18_X,
+      handler: 'handler',
+      entry: 'lib/lambda/schema_creator.ts',
+      environment: {
+          DB_HOST: process.env.DB_HOST!,
+          DB_DATABASE: process.env.DB_DATABASE!,
+          DB_USER: process.env.DB_USER!,
+          DB_PASSWORD: process.env.DB_PASSWORD!,
+          DB_PORT: process.env.DB_PORT || '5432',
+          DB_SCHEMA: process.env.DB_SCHEMA!
+      }
+  });
 
     // Outputs
     new cdk.CfnOutput(this, 'BucketName', { value: myBucket.bucketName });
